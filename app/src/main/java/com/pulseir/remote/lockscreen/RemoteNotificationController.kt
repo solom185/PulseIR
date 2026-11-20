@@ -11,6 +11,7 @@ import android.widget.RemoteViews
 import androidx.core.app.NotificationCompat
 import com.pulseir.remote.MainActivity
 import com.pulseir.remote.R
+import com.pulseir.remote.data.AppPreferences
 import com.pulseir.remote.data.SavedDevice
 import com.pulseir.remote.ir.ButtonRole
 import com.pulseir.remote.ir.SmartAcProtocol
@@ -32,8 +33,16 @@ object RemoteNotificationController {
     const val EXTRA_ROLE = "extra_role"
     const val EXTRA_AC_TEMP = "extra_ac_temp"
 
+    @Volatile
+    private var appPreferences: AppPreferences? = null
+
     private val _pinnedDeviceId = MutableStateFlow<String?>(null)
     val pinnedDeviceId: StateFlow<String?> = _pinnedDeviceId.asStateFlow()
+
+    fun init(preferences: AppPreferences) {
+        appPreferences = preferences
+        _pinnedDeviceId.value = preferences.getPinnedNotificationDeviceId()
+    }
 
     fun pinRemote(context: Context, device: SavedDevice) {
         val mgr = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
@@ -110,6 +119,7 @@ object RemoteNotificationController {
         runCatching {
             mgr.notify(NOTIFICATION_ID, notification)
             _pinnedDeviceId.value = device.id
+            appPreferences?.setPinnedNotificationDeviceId(device.id)
         }
     }
 
@@ -117,6 +127,7 @@ object RemoteNotificationController {
         val mgr = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         mgr.cancel(NOTIFICATION_ID)
         _pinnedDeviceId.value = null
+        appPreferences?.setPinnedNotificationDeviceId(null)
     }
 
     private fun ensureChannel(context: Context, mgr: NotificationManager) {

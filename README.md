@@ -21,7 +21,7 @@ Most universal remote apps are bloated with ads, trackers, subscriptions, or req
 
 - **Zero `INTERNET` Permission:** Completely offline by design. Only uses `TRANSMIT_IR`, optional `VIBRATE`, and optional `POST_NOTIFICATIONS` (only if you pin a remote to the Lock Screen).
 - **Massive Built-in Offline Catalog:** **6,031 remotes** and **182,000+ IR buttons** across **19 device categories** — TVs, Air Conditioners, Satellite Receivers / Set-Top Boxes (1,345 models including Strong, Humax, Starsat, Truman, Qmax, Dreambox, TechniSat, Echostar), AV Receivers, Soundbars, Projectors, Fans, LED Strips, Cameras, Heaters, Robot Vacuums, Car Audio, and more.
-- **Smart Full-Thermostat AC Engine:** Pure-Kotlin stateful bitstream generator (`AcProtocolEngine`) synthesizing exact checksum-verified frames for every temperature (16–30°C), mode (Cool/Heat/Dry/Fan/Auto), fan speed, and swing across **Coolix** (Carrier, Midea, Tornado, Fresh, Unionaire, York, Beko), **Gree** (Gree, Fresh, Unionaire, Haier, Hisense), **LG**, and **Toshiba**.
+- **Smart Full-Thermostat AC Engine:** Pure-Kotlin stateful bitstream generator (`AcProtocolEngine`) synthesizing exact checksum-verified frames with per-device state persistence across **7 protocols**: **Coolix** (Carrier, Midea, Tornado, Fresh, Unionaire, York, Beko), **Gree** (Gree, Fresh, Unionaire, Haier, Hisense), **Sharp** (Sharp, Tornado El-Araby), **LG**, **Samsung**, **Toshiba**, and **Daikin**.
 - **Lock Screen Control (Mi Remote Style):**
   - **Over Lock Screen:** Keep using your active remote directly over the lock screen without unlocking.
   - **Lock Screen Pin Bar:** Pin a compact mini-remote bar (`⏻ | 🔇 | VOL± | CH±` or AC temperature shortcuts) to your Lock Screen & Notification shade.
@@ -33,7 +33,7 @@ Most universal remote apps are bloated with ads, trackers, subscriptions, or req
   - **Macros:** Chain IR actions with configurable delays in one tap.
   - **Key Finder:** Sweep commands `0x00–0xFF` for any protocol & address to discover and rebuild remotes for obscure devices without needing an IR receiver chip.
   - **Custom IR Lab & `.ir` Importer:** Build Protocol, Pronto Hex, or Raw IR signals with live **Waveform Canvas** preview, or import standard Flipper Zero `.ir` files offline.
-  - **Home Screen Widget & Offline JSON Backup/Restore.**
+  - **Adaptive Home Screen Widget (TV & Smart AC) & Offline JSON Backup/Restore.**
 - **Full Bilingual Support:** Native **English (LTR)** & **Arabic (RTL)** — with physical remote geometry (D-Pad, Numpad `1–9`, Media controls) strictly locked to physical layout so arrows and digits never invert in RTL!
 
 ---
@@ -55,7 +55,7 @@ Most universal remote apps are bloated with ads, trackers, subscriptions, or req
 | **Philips** | `RC5`, `RC5X`, `RC6` (with hardware toggle bit) |
 | **Sony** | `SIRC` (12-bit), `SIRC15`, `SIRC20` (3× hardware repeat frames) |
 | **Japanese / Legacy** | `Kaseikyo` (Panasonic), `RCA`, `Pioneer` |
-| **Stateful Smart AC** | `Coolix` (Midea/Carrier/Tornado/Fresh), `Gree`, `LG AC`, `Toshiba AC` |
+| **Stateful Smart AC** | `Coolix` (Midea/Carrier/Tornado/Fresh), `Gree`, `Sharp` (Tornado), `LG AC`, `Samsung AC`, `Toshiba AC`, `Daikin AC` |
 | **Raw / Learned** | Pronto Hex (`0000 …`), Raw microsecond timings, Carrier cycle conversion, Flipper Zero `.ir` files |
 
 ---
@@ -76,9 +76,9 @@ Devices without an IR blaster run cleanly in preview/offline catalog mode.
 ```text
 PulseIR/
 ├── app/src/main/
-│   ├── assets/pulseir_catalog.db        # Precompiled 100% offline SQLite catalog (6,031 remotes)
+│   ├── assets/pulseir_catalog.db.gz     # Gzip-compressed 100% offline SQLite catalog (6,031 remotes, 6.5 MB)
 │   └── java/com/pulseir/remote/
-│       ├── ir/                          # 14-protocol IR encoder, Stateful AC engine, Pronto/.ir parser, ConsumerIrManager transmitter
+│       ├── ir/                          # 14-protocol IR encoder, 7-protocol Stateful AC engine, Pronto/.ir parser, ConsumerIrManager transmitter
 │       ├── data/                        # Offline SQLite catalog repository, local JSON store, backup/restore, preferences
 │       ├── lockscreen/                  # Lock-screen notification remote & Quick Settings TileService
 │       ├── widget/                      # Home screen 4×1 Quick Remote AppWidget

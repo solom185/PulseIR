@@ -1,7 +1,10 @@
 package com.pulseir.remote.data
 
 import android.content.Context
+import com.pulseir.remote.ir.AcState
 import com.pulseir.remote.ir.IrButton
+import com.pulseir.remote.lockscreen.RemoteNotificationController
+import com.pulseir.remote.widget.QuickRemoteWidgetProvider
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -9,6 +12,7 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import java.io.File
 import java.util.UUID
+import java.util.concurrent.Executors
 
 /**
  * 100% Offline local user data repository for saved devices, custom remotes,
@@ -18,7 +22,11 @@ class UserRepository(
     context: Context,
     private val catalogRepository: CatalogRepository,
 ) {
-    private val storeFile = File(context.applicationContext.filesDir, "pulseir_user_data.json")
+    private val appContext = context.applicationContext
+    private val storeFile = File(appContext.filesDir, "pulseir_user_data.json")
+    private val ioExecutor = Executors.newSingleThreadExecutor { r ->
+        Thread(r, "PulseIR-UserStore").apply { isDaemon = true }
+    }
     private val json = Json {
         prettyPrint = true
         ignoreUnknownKeys = true
@@ -32,7 +40,8 @@ class UserRepository(
     private fun updateAndPersist(transform: (UserStoreData) -> UserStoreData) {
         val next = transform(_state.value)
         _state.value = next
-        saveToDisk(next)
+        // Persist atomically off the Main Thread while preserving strict write order
+        ioExecutor.execute { saveToDisk(next) }
     }
 
     private fun loadFromDisk(): UserStoreData {
@@ -71,6 +80,7 @@ class UserRepository(
             model = model,
             catalogRemoteId = catalogRemoteId,
             smartAcProtocolId = smartAcProtocolId,
+            acState = if (smartAcProtocolId != null) AcState() else null,
             customButtons = customButtons,
         )
         updateAndPersist { it.copy(devices = listOf(device) + it.devices) }
@@ -82,6 +92,18 @@ class UserRepository(
             data.copy(
                 devices = data.devices.map { d ->
                     if (d.id == deviceId) d.copy(lastUsedAt = System.currentTimeMillis()) else d
+                },
+            )
+        }
+    }
+
+    fun updateDeviceAcState(deviceId: String, acState: AcState) {
+        updateAndPersist { data ->
+            data.copy(
+                devices = data.devices.map { d ->
+                    if (d.id == deviceId) {
+                        d.copy(acState = acState, lastUsedAt = System.currentTimeMillis())
+                    } else d
                 },
             )
         }
@@ -101,6 +123,10 @@ class UserRepository(
         updateAndPersist { data ->
             data.copy(devices = data.devices.filterNot { it.id == deviceId })
         }
+        if (RemoteNotificationController.pinnedDeviceId.value == deviceId) {
+            RemoteNotificationController.dismiss(appContext)
+        }
+        QuickRemoteWidgetProvider.refreshAllForDevice(appContext, deviceId)
     }
 
     fun getDevice(deviceId: String): SavedDevice? = _state.value.devices.firstOrNull { it.id == deviceId }
@@ -108,15 +134,17 @@ class UserRepository(
     fun getDeviceButtonsBlocking(device: SavedDevice): List<IrButton> {
         val smartProto = com.pulseir.remote.ir.SmartAcProtocol.fromId(device.smartAcProtocolId)
         if (smartProto != null) {
+            val base = device.acState ?: AcState()
+            val onState = base.copy(
+                powerOn = true,
+                tempC = base.tempC.coerceIn(smartProto.minTempC, smartProto.maxTempC),
+            )
             return listOf(
                 IrButton(
                     id = 1L,
-                    name = "Cool 24°C ON",
+                    name = "${onState.mode.name} ${onState.tempC}°C ON",
                     role = com.pulseir.remote.ir.ButtonRole.POWER_ON,
-                    signal = com.pulseir.remote.ir.AcProtocolEngine.encode(
-                        smartProto,
-                        com.pulseir.remote.ir.AcState(powerOn = true, tempC = 24),
-                    ),
+                    signal = com.pulseir.remote.ir.AcProtocolEngine.encode(smartProto, onState),
                 ),
                 IrButton(
                     id = 2L,
@@ -124,7 +152,7 @@ class UserRepository(
                     role = com.pulseir.remote.ir.ButtonRole.POWER_OFF,
                     signal = com.pulseir.remote.ir.AcProtocolEngine.encode(
                         smartProto,
-                        com.pulseir.remote.ir.AcState(powerOn = false),
+                        base.copy(powerOn = false),
                     ),
                 ),
             )

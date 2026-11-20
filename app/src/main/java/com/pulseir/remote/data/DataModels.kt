@@ -1,5 +1,6 @@
 package com.pulseir.remote.data
 
+import com.pulseir.remote.ir.AcState
 import com.pulseir.remote.ir.IrButton
 import com.pulseir.remote.ir.IrSignal
 import kotlinx.serialization.SerialName
@@ -50,6 +51,7 @@ data class SavedDevice(
     val model: String,
     val catalogRemoteId: Long? = null,
     val smartAcProtocolId: String? = null,
+    val acState: AcState? = null,
     val customButtons: List<IrButton> = emptyList(),
     val lastUsedAt: Long = System.currentTimeMillis(),
     val createdAt: Long = System.currentTimeMillis(),
