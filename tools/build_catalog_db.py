@@ -7,10 +7,12 @@ indexed SQLite database bundled 100% offline inside PulseIR:
   2. Flipper-IRDB _Converted_/IR_Plus (CC0-1.0 repo — strong MENA/EU receiver coverage!)
   3. Official LIRC Remotes (GPLv2+ open-source — 2,800+ classic global remotes!)
 """
+import gzip
 import hashlib
 import os
 import pathlib
 import re
+import shutil
 import sqlite3
 import struct
 import sys
@@ -20,6 +22,7 @@ REPO_ROOT = pathlib.Path(__file__).resolve().parent.parent
 FLIPPER_DIR = pathlib.Path(os.environ.get("FLIPPER_IRDB_DIR", str(REPO_ROOT.parent / "flipper_irdb")))
 LIRC_DIR = pathlib.Path(os.environ.get("LIRC_REMOTES_DIR", str(REPO_ROOT.parent / "lirc_remotes" / "remotes")))
 OUT_DB = REPO_ROOT / "app" / "src" / "main" / "assets" / "pulseir_catalog.db"
+OUT_DB_GZ = REPO_ROOT / "app" / "src" / "main" / "assets" / "pulseir_catalog.db.gz"
 
 CATEGORY_META = {
     "tv": ("TV", "تلفزيون", 1),
@@ -996,13 +999,16 @@ def main():
     conn.close()
 
     db_mb = OUT_DB.stat().st_size / (1024 * 1024)
+    with open(OUT_DB, "rb") as f_in, gzip.open(OUT_DB_GZ, "wb", compresslevel=9) as f_out:
+        shutil.copyfileobj(f_in, f_out)
+    gz_mb = OUT_DB_GZ.stat().st_size / (1024 * 1024)
     print("SUCCESS! Mega Offline Catalog v2 Built:")
     print(f"  Sources:    {dict(source_counts)}")
     print(f"  Categories: {len(cat_remotes)}")
     print(f"  Remotes:    {total_remotes}")
     print(f"  Buttons:    {total_buttons}")
     print(f"  Unique Raw: {len(raw_cache)}")
-    print(f"  SQLite DB:  {db_mb:.2f} MB (uncompressed; APK ZIP shrinks ~65%)")
+    print(f"  SQLite DB:  {db_mb:.2f} MB raw -> {gz_mb:.2f} MB gzipped ({OUT_DB_GZ.name})")
     # Print box & Strong stats!
     c2 = sqlite3.connect(OUT_DB)
     box_r, box_b = c2.execute("SELECT remote_count, brand_count FROM categories WHERE id='box'").fetchone()
@@ -1013,6 +1019,7 @@ def main():
     for sr in strong_rows:
         print(f"    [{sr[0]}] {sr[1]} - {sr[2]} ({sr[3]} btns)")
     c2.close()
+    OUT_DB.unlink(missing_ok=True)
 
 if __name__ == "__main__":
     main()

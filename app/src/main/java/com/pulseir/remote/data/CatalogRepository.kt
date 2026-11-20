@@ -9,12 +9,14 @@ import com.pulseir.remote.ir.IrProtocolEncoder
 import com.pulseir.remote.ir.IrSignal
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import java.io.BufferedInputStream
 import java.io.File
 import java.io.FileOutputStream
+import java.util.zip.GZIPInputStream
 
 /**
- * 100% Offline IR Catalog backed by precompiled SQLite database (Flipper-IRDB CC0-1.0).
- * Extracts assets/pulseir_catalog.db once to internal storage on first use.
+ * 100% Offline IR Catalog backed by precompiled SQLite database (Flipper-IRDB CC0-1.0 + LIRC).
+ * Extracts gzip-compressed assets/pulseir_catalog.db.gz once to internal storage on first use.
  */
 class CatalogRepository(context: Context) {
     private val appContext = context.applicationContext
@@ -33,7 +35,12 @@ class CatalogRepository(context: Context) {
                 appContext.getDatabasePath("pulseir_catalog_v1.db").delete()
                 dbFile.parentFile?.mkdirs()
                 val tmp = File(dbFile.parentFile, "$DB_FILENAME.tmp")
-                appContext.assets.open(ASSET_DB_NAME).use { assetIn ->
+                val assetStream = runCatching {
+                    GZIPInputStream(BufferedInputStream(appContext.assets.open(ASSET_DB_GZ_NAME), 64 * 1024))
+                }.getOrElse {
+                    appContext.assets.open(ASSET_DB_NAME)
+                }
+                assetStream.use { assetIn ->
                     FileOutputStream(tmp).use { out ->
                         assetIn.copyTo(out, bufferSize = 64 * 1024)
                     }
@@ -366,6 +373,7 @@ class CatalogRepository(context: Context) {
     }
 
     companion object {
+        private const val ASSET_DB_GZ_NAME = "pulseir_catalog.db.gz"
         private const val ASSET_DB_NAME = "pulseir_catalog.db"
         private const val DB_FILENAME = "pulseir_catalog_v2.db"
     }
