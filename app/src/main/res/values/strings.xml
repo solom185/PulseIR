@@ -1,0 +1,232 @@
+<resources>
+    <string name="app_name">PulseIR</string>
+    <string name="widget_quick_remote_name">PulseIR Quick Remote</string>
+    <string name="lockscreen_remote_channel">Lock Screen Remote</string>
+
+    <!-- Bottom navigation -->
+    <string name="nav_remotes">Remotes</string>
+    <string name="nav_scan">Scan</string>
+    <string name="nav_lab">Tools</string>
+    <string name="nav_settings">Settings</string>
+
+    <!-- Status & common -->
+    <string name="ir_ready">IR Ready</string>
+    <string name="ir_demo_mode">No IR Blaster</string>
+    <string name="offline_badge">Offline</string>
+    <string name="spec_codes">IR Codes</string>
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
+    <string name="delete">Delete</string>
+    <string name="edit">Edit</string>
+    <string name="add">Add</string>
+    <string name="test">Test</string>
+    <string name="search">Search…</string>
+    <string name="close">Close</string>
+    <string name="confirm">Confirm</string>
+    <string name="rename">Rename</string>
+    <string name="all_rooms">All</string>
+    <string name="room_living">Living Room</string>
+    <string name="room_bedroom">Bedroom</string>
+    <string name="room_office">Office</string>
+    <string name="room_other">Other</string>
+
+    <!-- Home -->
+    <string name="my_devices">My Devices</string>
+    <string name="my_custom_remotes">Custom Remotes</string>
+    <string name="quick_macros">Macros</string>
+    <string name="add_device">Add Device</string>
+    <string name="new_custom_remote">Custom Remote</string>
+    <string name="import_ir_file">Import .ir File</string>
+    <string name="empty_devices_title">No Remotes Yet</string>
+    <string name="empty_devices_desc">Add a device from the offline catalog, scan automatically, or import a .ir file.</string>
+    <string name="browse_catalog">Browse Catalog</string>
+    <string name="start_smart_scan">Auto Scan</string>
+    <string name="buttons_count">%1$d buttons</string>
+    <string name="brands_count">%1$d brands</string>
+    <string name="remotes_count">%1$d remotes</string>
+    <string name="last_used_remote">Recent</string>
+    <string name="catalog_subtitle">6,000+ offline remotes · 19 categories</string>
+    <string name="catalog_subtitle_mega">6,000+ offline remotes · 19 categories</string>
+
+    <!-- Catalog & Model Tester -->
+    <string name="select_category">Device Type</string>
+    <string name="select_brand">Brand</string>
+    <string name="select_model">Test Model</string>
+    <string name="model_of">Model %1$d of %2$d</string>
+    <string name="prev_model">Previous</string>
+    <string name="next_model">Next</string>
+    <string name="save_this_remote">Save Remote</string>
+    <string name="device_name_label">Device Name</string>
+    <string name="room_label">Room</string>
+    <string name="device_saved">Saved</string>
+    <string name="point_and_test">Point at your device and test the buttons below.</string>
+    <string name="smart_ac_section_title">Smart AC Thermostat</string>
+    <string name="smart_ac_section_desc">Full temperature (16–30°C), mode, fan speed, and swing control.</string>
+    <string name="smart_ac_badge">Thermostat</string>
+
+    <!-- Smart Scan -->
+    <string name="smart_scan_title">Auto Scan</string>
+    <string name="smart_scan_subtitle">Point your phone at the device to detect the matching remote.</string>
+    <string name="all_brands">All Brands</string>
+    <string name="scan_speed">Speed</string>
+    <string name="speed_turbo">Turbo (0.25s)</string>
+    <string name="speed_fast">Fast (0.45s)</string>
+    <string name="speed_normal">Normal (1.0s)</string>
+    <string name="speed_slow">Slow (2.0s)</string>
+    <string name="start_scan">Start Scan</string>
+    <string name="pause_scan">Pause</string>
+    <string name="resume_scan">Resume</string>
+    <string name="scan_stop">Stop</string>
+    <string name="it_worked">It Worked!</string>
+    <string name="reblast">Send Again</string>
+    <string name="scanning_code">Code %1$d / %2$d</string>
+    <string name="scanning_now">Scanning…</string>
+    <string name="scan_paused">Paused</string>
+    <string name="scan_complete">Scan Complete</string>
+    <string name="verify_match_title">Confirm Remote</string>
+    <string name="verify_match_desc">Test these buttons to confirm the exact model before saving.</string>
+    <string name="matching_models">%1$d models</string>
+    <string name="recent_blasted_title">Reacted late? Test any of the last 5 codes:</string>
+    <string name="missed_by_one">Try previous code (#%1$d)</string>
+    <string name="no_power_codes">No matching codes found.</string>
+
+    <!-- Remote Screen -->
+    <string name="tab_main">Remote</string>
+    <string name="tab_numpad">Keypad</string>
+    <string name="tab_media">Media</string>
+    <string name="tab_all">All</string>
+    <string name="power">Power</string>
+    <string name="power_on">ON</string>
+    <string name="power_off">OFF</string>
+    <string name="mute">Mute</string>
+    <string name="input">Input</string>
+    <string name="menu">Menu</string>
+    <string name="back">Back</string>
+    <string name="home">Home</string>
+    <string name="exit">Exit</string>
+    <string name="info">Info</string>
+    <string name="guide">Guide</string>
+    <string name="vol">VOL</string>
+    <string name="ch">CH</string>
+    <string name="ac_cool">Cool</string>
+    <string name="ac_heat">Heat</string>
+    <string name="ac_dry">Dry</string>
+    <string name="ac_fan">Fan</string>
+    <string name="ac_auto">Auto</string>
+    <string name="ac_swing">Swing</string>
+    <string name="ac_timer">Timer</string>
+    <string name="ac_speed">Fan</string>
+    <string name="ac_fan_auto">Auto</string>
+    <string name="ac_fan_low">Low</string>
+    <string name="ac_fan_med">Med</string>
+    <string name="ac_fan_high">High</string>
+    <string name="switch_device">Switch Device</string>
+    <string name="pin_lockscreen">Pin to Lock Screen</string>
+    <string name="pinned_lockscreen_toast">Pinned to Lock Screen</string>
+    <string name="unpinned_lockscreen_toast">Removed from Lock Screen</string>
+    <string name="signal_inspector_title">Signal Inspector</string>
+    <string name="save_to_custom_ir">Save to Custom IR</string>
+    <string name="saved_to_custom_ir">Saved</string>
+
+    <!-- Custom Remote -->
+    <string name="edit_mode">Edit</string>
+    <string name="done_editing">Done</string>
+    <string name="add_button">Add Button</string>
+    <string name="edit_button">Edit Button</string>
+    <string name="add_tab">Add Tab</string>
+    <string name="rename_tab">Rename Tab</string>
+    <string name="delete_tab">Delete Tab</string>
+    <string name="pick_action_source">Action</string>
+    <string name="from_saved_device">Device</string>
+    <string name="from_macro">Macro</string>
+    <string name="from_custom_ir">Custom IR</string>
+    <string name="button_label">Label</string>
+    <string name="button_color">Color</string>
+    <string name="wide_button">Wide Button</string>
+    <string name="empty_custom_remote">Tap Edit to add buttons from any device, macro, or custom code.</string>
+    <string name="save_device_first">Add a device first.</string>
+
+    <!-- Tools (Macros, Key Finder, Custom IR, Import) -->
+    <string name="tab_macros">Macros</string>
+    <string name="tab_discover">Finder</string>
+    <string name="tab_custom_ir">Custom IR</string>
+    <string name="tab_import">Import</string>
+    <string name="new_macro">New Macro</string>
+    <string name="edit_macro">Edit Macro</string>
+    <string name="run_macro">Run</string>
+    <string name="running_step">Step %1$d/%2$d…</string>
+    <string name="steps_count">%1$d steps</string>
+    <string name="add_ir_step">IR Action</string>
+    <string name="add_delay_step">Delay</string>
+    <string name="delay_ms">Wait %1$d ms</string>
+    <string name="macro_name_label">Macro Name</string>
+    <string name="no_macros_yet">No Macros</string>
+    <string name="no_macros_desc">Run multiple commands in sequence with a single tap.</string>
+
+    <string name="discover_title">Key Finder</string>
+    <string name="discover_desc">Sweep commands 0x00–0xFF for any protocol and save buttons as your device responds.</string>
+    <string name="fill_from_device">Load from Saved Device</string>
+    <string name="capture_key">Save Key</string>
+    <string name="captured_keys_count">Saved Keys (%1$d)</string>
+    <string name="save_discovered_remote">Save Remote</string>
+
+    <string name="new_custom_code">Custom Signal</string>
+    <string name="format_protocol">Protocol</string>
+    <string name="format_pronto">Pronto Hex</string>
+    <string name="format_raw">Raw (µs)</string>
+    <string name="protocol_label">Protocol</string>
+    <string name="addr_hex_short">Address (Hex)</string>
+    <string name="cmd_hex_short">Command (Hex)</string>
+    <string name="pronto_hint">0000 006D …</string>
+    <string name="raw_freq_label">Frequency (Hz)</string>
+    <string name="raw_pattern_label">Timings</string>
+    <string name="raw_in_cycles">Values in carrier cycles</string>
+    <string name="waveform_preview">Waveform</string>
+    <string name="invalid_ir_code">Invalid format</string>
+    <string name="no_custom_ir_yet">No Saved Codes</string>
+    <string name="no_custom_ir_desc">Build Protocol, Pronto Hex, or Raw IR signals.</string>
+
+    <string name="import_ir_title">Import .ir Remote</string>
+    <string name="import_ir_desc">Import standard Flipper .ir files directly from device storage.</string>
+    <string name="pick_ir_file">Choose File</string>
+    <string name="import_success">Loaded \"%1$s\" (%2$d buttons)</string>
+    <string name="import_failed">No valid IR signals found.</string>
+
+    <!-- Settings -->
+    <string name="settings_appearance">Appearance</string>
+    <string name="settings_theme">Theme</string>
+    <string name="theme_system">System</string>
+    <string name="theme_dark">Obsidian</string>
+    <string name="theme_light">Light</string>
+    <string name="settings_dynamic_color">Dynamic Colors</string>
+    <string name="settings_language">Language</string>
+    <string name="lang_system">System</string>
+    <string name="lang_arabic">العربية</string>
+    <string name="lang_english">English</string>
+    <string name="settings_controls">Controls</string>
+    <string name="settings_lock_screen">Lock Screen Remote</string>
+    <string name="settings_lock_screen_desc">Use the active remote directly over the lock screen without unlocking.</string>
+    <string name="settings_volume_keys">Hardware Volume Keys</string>
+    <string name="settings_volume_keys_desc">Control TV volume with your phone\'s side buttons.</string>
+    <string name="settings_keep_screen_on">Keep Screen On</string>
+    <string name="settings_keep_screen_on_desc">Prevent sleep while a remote is open.</string>
+    <string name="settings_haptics">Haptics</string>
+    <string name="haptics_off">Off</string>
+    <string name="haptics_light">Light</string>
+    <string name="haptics_medium">Medium</string>
+    <string name="haptics_strong">Strong</string>
+    <string name="settings_hardware">IR Hardware</string>
+    <string name="supported_frequencies">Frequencies</string>
+    <string name="send_test_pulse">Send 38 kHz Test</string>
+    <string name="test_pulse_tip">Point the top IR emitter at another camera to verify the infrared flash.</string>
+    <string name="settings_backup">Backup</string>
+    <string name="export_backup">Export</string>
+    <string name="import_backup">Restore</string>
+    <string name="backup_exported">Backup exported</string>
+    <string name="backup_restored">Backup restored</string>
+    <string name="settings_about">About</string>
+    <string name="zero_internet_badge">100% Offline</string>
+    <string name="about_desc">Offline universal IR remote. Built-in database powered by Flipper-IRDB (CC0) and LIRC (GPL).</string>
+    <string name="catalog_stats">%1$d remotes · %2$d buttons</string>
+    <string name="made_by_signature">Crafted with ❤️ by Islam Ahmed Mohamed</string>
+</resources>

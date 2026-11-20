@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- 100% OFFLINE: Zero INTERNET permission! -->
+    <uses-permission android:name="android.permission.TRANSMIT_IR" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <!-- Optional: only used when user pins a remote to the Lock Screen / Notification bar -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
+    <uses-feature
+        android:name="android.hardware.consumerir"
+        android:required="false" />
+
+    <application
+        android:name=".PulseIRApplication"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.PulseIR"
+        android:windowSoftInputMode="adjustResize">
+
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:launchMode="singleTop">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- Lock-Screen Notification Remote Action Receiver -->
+        <receiver
+            android:name=".lockscreen.RemoteNotificationReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.pulseir.remote.ACTION_NOTIF_TRANSMIT" />
+                <action android:name="com.pulseir.remote.ACTION_NOTIF_DISMISS" />
+            </intent-filter>
+        </receiver>
+
+        <!-- Quick Settings Tile (HyperOS / Android Control Center, works from Lock Screen!) -->
+        <service
+            android:name=".lockscreen.PulseTileService"
+            android:exported="true"
+            android:icon="@drawable/ic_tile_remote"
+            android:label="@string/app_name"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+        </service>
+
+        <!-- Home Screen Quick Remote Widget -->
+        <receiver
+            android:name=".widget.QuickRemoteWidgetProvider"
+            android:exported="false"
+            android:label="@string/widget_quick_remote_name">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="com.pulseir.remote.ACTION_WIDGET_TRANSMIT" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/quick_remote_widget_info" />
+        </receiver>
+
+        <activity
+            android:name=".widget.WidgetConfigureActivity"
+            android:exported="true"
+            android:theme="@style/Theme.PulseIR">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+            </intent-filter>
+        </activity>
+
+    </application>
+
+</manifest>

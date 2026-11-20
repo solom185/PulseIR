@@ -1,0 +1,232 @@
+<resources>
+    <string name="app_name">PulseIR</string>
+    <string name="widget_quick_remote_name">ريموت PulseIR السريع</string>
+    <string name="lockscreen_remote_channel">ريموت شاشة القفل</string>
+
+    <!-- Bottom navigation -->
+    <string name="nav_remotes">أجهزتي</string>
+    <string name="nav_scan">بحث</string>
+    <string name="nav_lab">أدوات</string>
+    <string name="nav_settings">الإعدادات</string>
+
+    <!-- Status & common -->
+    <string name="ir_ready">IR جاهز</string>
+    <string name="ir_demo_mode">لا يوجد IR</string>
+    <string name="offline_badge">أوفلاين</string>
+    <string name="spec_codes">كود IR</string>
+    <string name="save">حفظ</string>
+    <string name="cancel">إلغاء</string>
+    <string name="delete">حذف</string>
+    <string name="edit">تعديل</string>
+    <string name="add">إضافة</string>
+    <string name="test">تجربة</string>
+    <string name="search">بحث…</string>
+    <string name="close">إغلاق</string>
+    <string name="confirm">تأكيد</string>
+    <string name="rename">تسمية</string>
+    <string name="all_rooms">الكل</string>
+    <string name="room_living">المعيشة</string>
+    <string name="room_bedroom">النوم</string>
+    <string name="room_office">المكتب</string>
+    <string name="room_other">أخرى</string>
+
+    <!-- Home -->
+    <string name="my_devices">أجهزتي</string>
+    <string name="my_custom_remotes">ريموتات مخصصة</string>
+    <string name="quick_macros">ماكرو</string>
+    <string name="add_device">إضافة جهاز</string>
+    <string name="new_custom_remote">ريموت مخصص</string>
+    <string name="import_ir_file">استيراد ملف .ir</string>
+    <string name="empty_devices_title">لا توجد أجهزة بعد</string>
+    <string name="empty_devices_desc">أضف جهازاً من القاعدة المدمجة، أو اكتشفه تلقائياً، أو استورد ملف .ir.</string>
+    <string name="browse_catalog">تصفّح القاعدة</string>
+    <string name="start_smart_scan">بحث تلقائي</string>
+    <string name="buttons_count">%1$d زر</string>
+    <string name="brands_count">%1$d ماركة</string>
+    <string name="remotes_count">%1$d ريموت</string>
+    <string name="last_used_remote">الأخير</string>
+    <string name="catalog_subtitle">أكثر من 6,000 ريموت · 19 فئة</string>
+    <string name="catalog_subtitle_mega">أكثر من 6,000 ريموت · 19 فئة</string>
+
+    <!-- Catalog & Model Tester -->
+    <string name="select_category">نوع الجهاز</string>
+    <string name="select_brand">الماركة</string>
+    <string name="select_model">تجربة الموديل</string>
+    <string name="model_of">موديل %1$d من %2$d</string>
+    <string name="prev_model">السابق</string>
+    <string name="next_model">التالي</string>
+    <string name="save_this_remote">حفظ الريموت</string>
+    <string name="device_name_label">اسم الجهاز</string>
+    <string name="room_label">الغرفة</string>
+    <string name="device_saved">تم الحفظ</string>
+    <string name="point_and_test">وجّه الهاتف نحو الجهاز وجرّب الأزرار.</string>
+    <string name="smart_ac_section_title">تكييف ذكي (ثرموستات)</string>
+    <string name="smart_ac_section_desc">تحكم كامل بالحرارة (16–30°)، الوضع، سرعة المروحة والتوجيه.</string>
+    <string name="smart_ac_badge">ثرموستات</string>
+
+    <!-- Smart Scan -->
+    <string name="smart_scan_title">البحث التلقائي</string>
+    <string name="smart_scan_subtitle">وجّه هاتفك نحو الجهاز لاكتشاف الريموت المناسب تلقائياً.</string>
+    <string name="all_brands">كل الماركات</string>
+    <string name="scan_speed">السرعة</string>
+    <string name="speed_turbo">تيربو (0.25 ث)</string>
+    <string name="speed_fast">سريع (0.45 ث)</string>
+    <string name="speed_normal">متوسط (1.0 ث)</string>
+    <string name="speed_slow">بطيء (2.0 ث)</string>
+    <string name="start_scan">بدء البحث</string>
+    <string name="pause_scan">إيقاف مؤقت</string>
+    <string name="resume_scan">استئناف</string>
+    <string name="scan_stop">إيقاف</string>
+    <string name="it_worked">استجاب الجهاز!</string>
+    <string name="reblast">إعادة الإرسال</string>
+    <string name="scanning_code">كود %1$d / %2$d</string>
+    <string name="scanning_now">جاري البحث…</string>
+    <string name="scan_paused">متوقف مؤقتاً</string>
+    <string name="scan_complete">انتهى البحث</string>
+    <string name="verify_match_title">تأكيد الريموت</string>
+    <string name="verify_match_desc">جرّب الأزرار التالية للتأكد من الموديل قبل الحفظ.</string>
+    <string name="matching_models">%1$d موديل</string>
+    <string name="recent_blasted_title">استجاب متأخراً؟ جرّب آخر 5 أكواد:</string>
+    <string name="missed_by_one">جرّب الكود السابق (#%1$d)</string>
+    <string name="no_power_codes">لا توجد أكواد مطابقة.</string>
+
+    <!-- Remote Screen -->
+    <string name="tab_main">الريموت</string>
+    <string name="tab_numpad">الأرقام</string>
+    <string name="tab_media">الميديا</string>
+    <string name="tab_all">الكل</string>
+    <string name="power">تشغيل</string>
+    <string name="power_on">تشغيل</string>
+    <string name="power_off">إيقاف</string>
+    <string name="mute">كتم</string>
+    <string name="input">المدخل</string>
+    <string name="menu">القائمة</string>
+    <string name="back">رجوع</string>
+    <string name="home">الرئيسية</string>
+    <string name="exit">خروج</string>
+    <string name="info">معلومات</string>
+    <string name="guide">الدليل</string>
+    <string name="vol">الصوت</string>
+    <string name="ch">القناة</string>
+    <string name="ac_cool">تبريد</string>
+    <string name="ac_heat">تدفئة</string>
+    <string name="ac_dry">تجفيف</string>
+    <string name="ac_fan">مروحة</string>
+    <string name="ac_auto">تلقائي</string>
+    <string name="ac_swing">توجيه</string>
+    <string name="ac_timer">مؤقت</string>
+    <string name="ac_speed">المروحة</string>
+    <string name="ac_fan_auto">تلقائي</string>
+    <string name="ac_fan_low">هادئ</string>
+    <string name="ac_fan_med">متوسط</string>
+    <string name="ac_fan_high">عالي</string>
+    <string name="switch_device">تبديل الجهاز</string>
+    <string name="pin_lockscreen">تثبيت على شاشة القفل</string>
+    <string name="pinned_lockscreen_toast">تم التثبيت على شاشة القفل</string>
+    <string name="unpinned_lockscreen_toast">تمت الإزالة من شاشة القفل</string>
+    <string name="signal_inspector_title">فاحص الإشارة</string>
+    <string name="save_to_custom_ir">حفظ كـ كود مخصص</string>
+    <string name="saved_to_custom_ir">تم الحفظ</string>
+
+    <!-- Custom Remote -->
+    <string name="edit_mode">تعديل</string>
+    <string name="done_editing">تم</string>
+    <string name="add_button">إضافة زر</string>
+    <string name="edit_button">تعديل الزر</string>
+    <string name="add_tab">تبويب جديد</string>
+    <string name="rename_tab">تسمية التبويب</string>
+    <string name="delete_tab">حذف التبويب</string>
+    <string name="pick_action_source">الوظيفة</string>
+    <string name="from_saved_device">جهاز</string>
+    <string name="from_macro">ماكرو</string>
+    <string name="from_custom_ir">كود مخصص</string>
+    <string name="button_label">الاسم</string>
+    <string name="button_color">اللون</string>
+    <string name="wide_button">زر عريض</string>
+    <string name="empty_custom_remote">اضغط تعديل لإضافة أزرار من أي جهاز أو ماكرو أو كود مخصص.</string>
+    <string name="save_device_first">أضف جهازاً أولاً.</string>
+
+    <!-- Tools (Macros, Key Finder, Custom IR, Import) -->
+    <string name="tab_macros">ماكرو</string>
+    <string name="tab_discover">اكتشاف</string>
+    <string name="tab_custom_ir">أكواد</string>
+    <string name="tab_import">استيراد</string>
+    <string name="new_macro">ماكرو جديد</string>
+    <string name="edit_macro">تعديل الماكرو</string>
+    <string name="run_macro">تشغيل</string>
+    <string name="running_step">خطوة %1$d/%2$d…</string>
+    <string name="steps_count">%1$d خطوة</string>
+    <string name="add_ir_step">أمر IR</string>
+    <string name="add_delay_step">انتظار</string>
+    <string name="delay_ms">انتظار %1$d مللي ث</string>
+    <string name="macro_name_label">اسم الماكرو</string>
+    <string name="no_macros_yet">لا يوجد ماكرو</string>
+    <string name="no_macros_desc">نفّذ عدة أوامر متتالية بضغطة واحدة.</string>
+
+    <string name="discover_title">اكتشاف الأزرار</string>
+    <string name="discover_desc">جرّب الأوامر من 0x00 إلى 0xFF واحفظ كل زر يستجيب له جهازك لبناء ريموت كامل.</string>
+    <string name="fill_from_device">سحب من جهاز محفوظ</string>
+    <string name="capture_key">حفظ الزر</string>
+    <string name="captured_keys_count">الأزرار المحفوظة (%1$d)</string>
+    <string name="save_discovered_remote">حفظ الريموت</string>
+
+    <string name="new_custom_code">إشارة مخصصة</string>
+    <string name="format_protocol">بروتوكول</string>
+    <string name="format_pronto">Pronto Hex</string>
+    <string name="format_raw">خام (µs)</string>
+    <string name="protocol_label">البروتوكول</string>
+    <string name="addr_hex_short">العنوان (Hex)</string>
+    <string name="cmd_hex_short">الأمر (Hex)</string>
+    <string name="pronto_hint">0000 006D …</string>
+    <string name="raw_freq_label">التردد (Hz)</string>
+    <string name="raw_pattern_label">المدد الزمنية</string>
+    <string name="raw_in_cycles">القيم بعدد الدورات</string>
+    <string name="waveform_preview">الموجة</string>
+    <string name="invalid_ir_code">صيغة غير صالحة</string>
+    <string name="no_custom_ir_yet">لا توجد أكواد</string>
+    <string name="no_custom_ir_desc">أنشئ إشارات بروتوكول أو Pronto Hex أو خام.</string>
+
+    <string name="import_ir_title">استيراد ملف .ir</string>
+    <string name="import_ir_desc">استورد ملفات Flipper .ir مباشرة من ذاكرة الهاتف.</string>
+    <string name="pick_ir_file">اختيار ملف</string>
+    <string name="import_success">تم تحميل \"%1$s\" (%2$d زر)</string>
+    <string name="import_failed">لا توجد إشارات صالحة في الملف.</string>
+
+    <!-- Settings -->
+    <string name="settings_appearance">المظهر</string>
+    <string name="settings_theme">السمة</string>
+    <string name="theme_system">النظام</string>
+    <string name="theme_dark">داكن</string>
+    <string name="theme_light">فاتح</string>
+    <string name="settings_dynamic_color">الألوان الديناميكية</string>
+    <string name="settings_language">اللغة</string>
+    <string name="lang_system">النظام</string>
+    <string name="lang_arabic">العربية</string>
+    <string name="lang_english">English</string>
+    <string name="settings_controls">التحكم</string>
+    <string name="settings_lock_screen">العمل على شاشة القفل</string>
+    <string name="settings_lock_screen_desc">استخدم الريموت النشط مباشرة فوق شاشة القفل بدون فتح الهاتف.</string>
+    <string name="settings_volume_keys">أزرار صوت الهاتف</string>
+    <string name="settings_volume_keys_desc">تحكّم بصوت التلفزيون من الأزرار الجانبية للهاتف.</string>
+    <string name="settings_keep_screen_on">إبقاء الشاشة مضاءة</string>
+    <string name="settings_keep_screen_on_desc">منع قفل الشاشة أثناء فتح الريموت.</string>
+    <string name="settings_haptics">الاهتزاز</string>
+    <string name="haptics_off">مغلق</string>
+    <string name="haptics_light">خفيف</string>
+    <string name="haptics_medium">متوسط</string>
+    <string name="haptics_strong">قوي</string>
+    <string name="settings_hardware">مستشعر IR</string>
+    <string name="supported_frequencies">الترددات</string>
+    <string name="send_test_pulse">اختبار 38 kHz</string>
+    <string name="test_pulse_tip">وجّه العدسة العلوية نحو كاميرا أخرى للتحقق من وميض الأشعة.</string>
+    <string name="settings_backup">النسخ الاحتياطي</string>
+    <string name="export_backup">تصدير</string>
+    <string name="import_backup">استعادة</string>
+    <string name="backup_exported">تم التصدير</string>
+    <string name="backup_restored">تمت الاستعادة</string>
+    <string name="settings_about">عن التطبيق</string>
+    <string name="zero_internet_badge">أوفلاين 100%</string>
+    <string name="about_desc">ريموت عالمي يعمل بدون إنترنت. قاعدة البيانات مبنية على Flipper-IRDB و LIRC.</string>
+    <string name="catalog_stats">%1$d ريموت · %2$d زر</string>
+    <string name="made_by_signature">صُنع بكل ❤️ بواسطة إسلام أحمد محمد</string>
+</resources>
