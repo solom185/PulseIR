@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <full-backup-content>
+    <!-- Explicit allowlist: backs up only user data & preferences; read-only catalog DB is excluded automatically -->
     <include domain="file" path="pulseir_user_data.json" />
     <include domain="sharedpref" path="pulseir_prefs.xml" />
-    <exclude domain="database" path="." />
 </full-backup-content>
