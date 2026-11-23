@@ -11,10 +11,14 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.PlatformTextStyle
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.unit.sp
+import com.pulseir.remote.R
 import com.pulseir.remote.data.ThemeMode
 
 object PulseColors {
@@ -93,49 +97,50 @@ private val CrispLightScheme = lightColorScheme(
     outlineVariant = Color(0xFFE2E8F0),
 )
 
+val PulseFontFamily = FontFamily(
+    Font(R.font.year_of_handicrafts_regular, FontWeight.Normal),
+    Font(R.font.year_of_handicrafts_medium, FontWeight.Medium),
+    Font(R.font.year_of_handicrafts_semibold, FontWeight.SemiBold),
+    Font(R.font.year_of_handicrafts_bold, FontWeight.Bold),
+    Font(R.font.year_of_handicrafts_black, FontWeight.ExtraBold),
+    Font(R.font.year_of_handicrafts_black, FontWeight.Black),
+)
+
+private val PulsePlatformStyle = PlatformTextStyle(includeFontPadding = false)
+private val PulseLineHeightStyle = LineHeightStyle(
+    alignment = LineHeightStyle.Alignment.Center,
+    trim = LineHeightStyle.Trim.None,
+)
+
+private fun pulseStyle(
+    weight: FontWeight,
+    sizeSp: Int,
+    lineHeightSp: Int,
+): TextStyle = TextStyle(
+    fontFamily = PulseFontFamily,
+    fontWeight = weight,
+    fontSize = sizeSp.sp,
+    lineHeight = lineHeightSp.sp,
+    platformStyle = PulsePlatformStyle,
+    lineHeightStyle = PulseLineHeightStyle,
+)
+
 val PulseTypography = Typography(
-    headlineMedium = TextStyle(
-        fontFamily = FontFamily.SansSerif,
-        fontWeight = FontWeight.Bold,
-        fontSize = 26.sp,
-        lineHeight = 32.sp,
-    ),
-    titleLarge = TextStyle(
-        fontFamily = FontFamily.SansSerif,
-        fontWeight = FontWeight.Bold,
-        fontSize = 20.sp,
-        lineHeight = 26.sp,
-    ),
-    titleMedium = TextStyle(
-        fontFamily = FontFamily.SansSerif,
-        fontWeight = FontWeight.SemiBold,
-        fontSize = 16.sp,
-        lineHeight = 22.sp,
-    ),
-    bodyLarge = TextStyle(
-        fontFamily = FontFamily.SansSerif,
-        fontWeight = FontWeight.Normal,
-        fontSize = 15.sp,
-        lineHeight = 22.sp,
-    ),
-    bodyMedium = TextStyle(
-        fontFamily = FontFamily.SansSerif,
-        fontWeight = FontWeight.Normal,
-        fontSize = 13.sp,
-        lineHeight = 18.sp,
-    ),
-    labelLarge = TextStyle(
-        fontFamily = FontFamily.SansSerif,
-        fontWeight = FontWeight.SemiBold,
-        fontSize = 13.sp,
-        lineHeight = 18.sp,
-    ),
-    labelSmall = TextStyle(
-        fontFamily = FontFamily.SansSerif,
-        fontWeight = FontWeight.Medium,
-        fontSize = 11.sp,
-        lineHeight = 14.sp,
-    ),
+    displayLarge = pulseStyle(FontWeight.Black, 48, 58),
+    displayMedium = pulseStyle(FontWeight.Black, 38, 48),
+    displaySmall = pulseStyle(FontWeight.Bold, 32, 42),
+    headlineLarge = pulseStyle(FontWeight.Bold, 30, 40),
+    headlineMedium = pulseStyle(FontWeight.Bold, 26, 36),
+    headlineSmall = pulseStyle(FontWeight.Bold, 22, 30),
+    titleLarge = pulseStyle(FontWeight.Bold, 20, 28),
+    titleMedium = pulseStyle(FontWeight.SemiBold, 16, 24),
+    titleSmall = pulseStyle(FontWeight.SemiBold, 14, 20),
+    bodyLarge = pulseStyle(FontWeight.Normal, 15, 24),
+    bodyMedium = pulseStyle(FontWeight.Normal, 13, 20),
+    bodySmall = pulseStyle(FontWeight.Normal, 12, 18),
+    labelLarge = pulseStyle(FontWeight.SemiBold, 13, 19),
+    labelMedium = pulseStyle(FontWeight.Medium, 12, 17),
+    labelSmall = pulseStyle(FontWeight.Medium, 11, 16),
 )
 
 @Composable

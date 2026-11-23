@@ -87,4 +87,17 @@ class AppPreferences(context: Context) {
     fun removeWidgetDevice(widgetId: Int) {
         prefs.edit().remove("widget_device_$widgetId").apply()
     }
+
+    // Lock-screen pinned notification remote persistence
+    fun setPinnedNotificationDeviceId(deviceId: String?) {
+        val editor = prefs.edit()
+        if (deviceId == null) {
+            editor.remove("pinned_notif_device_id")
+        } else {
+            editor.putString("pinned_notif_device_id", deviceId)
+        }
+        editor.apply()
+    }
+
+    fun getPinnedNotificationDeviceId(): String? = prefs.getString("pinned_notif_device_id", null)
 }

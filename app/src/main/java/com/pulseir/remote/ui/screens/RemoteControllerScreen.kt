@@ -118,6 +118,7 @@ import com.pulseir.remote.ui.components.WaveformCanvas
 import com.pulseir.remote.ui.components.categoryAccentColor
 import com.pulseir.remote.ui.components.categoryIcon
 import com.pulseir.remote.ui.theme.PulseColors
+import com.pulseir.remote.widget.QuickRemoteWidgetProvider
 import java.util.UUID
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -300,7 +301,13 @@ fun RemoteControllerScreen(
         if (smartAcProto != null) {
             Box(Modifier.fillMaxSize().padding(padding)) {
                 StatefulSmartAcBody(
+                    deviceId = device.id,
                     protocol = smartAcProto,
+                    persistedState = device.acState,
+                    onStateChanged = { next ->
+                        userRepository.updateDeviceAcState(device.id, next)
+                        QuickRemoteWidgetProvider.refreshAllForDevice(context, device.id)
+                    },
                     irTransmitter = irTransmitter,
                 )
             }
@@ -389,19 +396,37 @@ fun RemoteControllerScreen(
 }
 
 /**
- * Full Computational Stateful Smart AC Thermostat UI (Coolix / Gree / LG / Toshiba).
+ * Full Computational Stateful Smart AC Thermostat UI
+ * (Coolix / Gree / Sharp / LG / Samsung / Toshiba / Daikin).
  */
 @Composable
 private fun StatefulSmartAcBody(
+    deviceId: String,
     protocol: SmartAcProtocol,
+    persistedState: AcState?,
+    onStateChanged: (AcState) -> Unit,
     irTransmitter: IrTransmitter,
 ) {
-    var acState by remember { mutableStateOf(AcState(powerOn = true, mode = AcMode.COOL, tempC = 24, fanSpeed = AcFanSpeed.AUTO, swing = false)) }
+    val initialState = remember(deviceId, protocol) {
+        val base = persistedState ?: AcState()
+        base.copy(tempC = base.tempC.coerceIn(protocol.minTempC, protocol.maxTempC))
+    }
+    var acState by remember(deviceId) { mutableStateOf(initialState) }
+
+    // Keep thermostat synced when AC state is updated externally (Lock Screen bar or Home Widget)
+    LaunchedEffect(persistedState) {
+        if (persistedState != null && persistedState != acState) {
+            acState = persistedState.copy(tempC = persistedState.tempC.coerceIn(protocol.minTempC, protocol.maxTempC))
+        }
+    }
+
     val lastFrame = remember(protocol, acState) { AcProtocolEngine.encode(protocol, acState) }
 
     fun send(next: AcState, label: String, swingOnly: Boolean = false) {
-        acState = next
-        val frame = AcProtocolEngine.encode(protocol, next, swingToggleOnly = swingOnly)
+        val clamped = next.copy(tempC = next.tempC.coerceIn(protocol.minTempC, protocol.maxTempC))
+        acState = clamped
+        onStateChanged(clamped)
+        val frame = AcProtocolEngine.encode(protocol, clamped, swingToggleOnly = swingOnly)
         irTransmitter.transmit(frame, label)
     }
 
@@ -455,7 +480,10 @@ private fun StatefulSmartAcBody(
                         ) {
                             TactileRemoteButton(
                                 onPress = {
-                                    val next = acState.copy(powerOn = true, tempC = (acState.tempC - 1).coerceIn(16, 30))
+                                    val next = acState.copy(
+                                        powerOn = true,
+                                        tempC = (acState.tempC - 1).coerceIn(protocol.minTempC, protocol.maxTempC),
+                                    )
                                     send(next, "${next.mode} ${next.tempC}°C")
                                 },
                                 icon = Icons.Rounded.Remove,
@@ -471,7 +499,10 @@ private fun StatefulSmartAcBody(
                             )
                             TactileRemoteButton(
                                 onPress = {
-                                    val next = acState.copy(powerOn = true, tempC = (acState.tempC + 1).coerceIn(16, 30))
+                                    val next = acState.copy(
+                                        powerOn = true,
+                                        tempC = (acState.tempC + 1).coerceIn(protocol.minTempC, protocol.maxTempC),
+                                    )
                                     send(next, "${next.mode} ${next.tempC}°C")
                                 },
                                 icon = Icons.Rounded.Add,
@@ -567,8 +598,7 @@ private fun StatefulSmartAcBody(
             TactileRemoteButton(
                 onPress = {
                     val next = acState.copy(swing = !acState.swing)
-                    val useSwingOnly = protocol == SmartAcProtocol.COOLIX || protocol == SmartAcProtocol.LG
-                    send(next, "Swing ${if (next.swing) "ON" else "OFF"}", swingOnly = useSwingOnly)
+                    send(next, "Swing ${if (next.swing) "ON" else "OFF"}", swingOnly = protocol.usesSeparateSwingCommand)
                 },
                 icon = Icons.Rounded.SwapVert,
                 label = "${stringResource(R.string.ac_swing)} (${if (acState.swing) "ON" else "OFF"})",

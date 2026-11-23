@@ -1,6 +1,7 @@
 package com.pulseir.remote.widget
 
 import android.appwidget.AppWidgetManager
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -32,13 +33,21 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.pulseir.remote.MainActivity
 import com.pulseir.remote.PulseIRApplication
 import com.pulseir.remote.R
+import com.pulseir.remote.data.AppPreferences
 import com.pulseir.remote.ui.components.categoryAccentColor
 import com.pulseir.remote.ui.components.categoryIcon
 import com.pulseir.remote.ui.theme.PulseIRTheme
 
 class WidgetConfigureActivity : ComponentActivity() {
+    override fun attachBaseContext(newBase: Context) {
+        val prefs = AppPreferences(newBase)
+        val lang = prefs.settings.value.language
+        super.attachBaseContext(MainActivity.wrapLocaleContext(newBase, lang))
+    }
+
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

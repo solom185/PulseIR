@@ -21,7 +21,8 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.Saver
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -45,6 +46,26 @@ private sealed interface OverlayRoute {
     data class CustomRemote(val customRemoteId: String) : OverlayRoute
 }
 
+private val OverlayRouteSaver = Saver<OverlayRoute?, String>(
+    save = { route ->
+        when (route) {
+            null -> ""
+            is OverlayRoute.Catalog -> "catalog"
+            is OverlayRoute.Remote -> "remote:${route.deviceId}"
+            is OverlayRoute.CustomRemote -> "custom:${route.customRemoteId}"
+        }
+    },
+    restore = { raw ->
+        when {
+            raw.isEmpty() -> null
+            raw == "catalog" -> OverlayRoute.Catalog
+            raw.startsWith("remote:") -> OverlayRoute.Remote(raw.removePrefix("remote:"))
+            raw.startsWith("custom:") -> OverlayRoute.CustomRemote(raw.removePrefix("custom:"))
+            else -> null
+        }
+    },
+)
+
 @Composable
 fun PulseIRApp(
     app: PulseIRApplication,
@@ -57,9 +78,9 @@ fun PulseIRApp(
     val settings by app.preferences.settings.collectAsState()
     val lastPulse by app.irTransmitter.lastPulse.collectAsState()
 
-    var bottomTab by remember { mutableIntStateOf(0) }
-    var labInitialTab by remember { mutableIntStateOf(0) }
-    var overlay by remember { mutableStateOf<OverlayRoute?>(null) }
+    var bottomTab by rememberSaveable { mutableIntStateOf(0) }
+    var labInitialTab by rememberSaveable { mutableIntStateOf(0) }
+    var overlay by rememberSaveable(stateSaver = OverlayRouteSaver) { mutableStateOf<OverlayRoute?>(null) }
 
     // Open target device directly when launched from Lock Screen Notification or Quick Settings Tile
     LaunchedEffect(externalOpenDeviceId) {
@@ -169,6 +190,7 @@ fun PulseIRApp(
                                 },
                             )
                             1 -> SmartScanScreen(
+                                preferences = app.preferences,
                                 catalogRepository = app.catalogRepository,
                                 userRepository = app.userRepository,
                                 irTransmitter = app.irTransmitter,

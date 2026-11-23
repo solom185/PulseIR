@@ -6,6 +6,10 @@ on:
   pull_request:
     branches: [ main ]
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
@@ -15,7 +19,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Set up JDK 17
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           java-version: '17'
           distribution: 'temurin'
@@ -24,14 +28,24 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      - name: Run IR Engine & AC Protocol Unit Tests
+      - name: Run Unit Tests (IR Engine, AC Protocols, Parser & Data Serialization)
         run: ./gradlew testDebugUnitTest --no-daemon
 
-      - name: Build Debug APK
-        run: ./gradlew assembleDebug --no-daemon
+      - name: Build Debug & Minified Release APKs (R8 Verification)
+        run: ./gradlew assembleDebug assembleRelease --no-daemon
+
+      - name: Report APK Sizes
+        run: |
+          ls -lh app/build/outputs/apk/debug/*.apk app/build/outputs/apk/release/*.apk
 
       - name: Upload Debug APK
         uses: actions/upload-artifact@v4
         with:
           name: PulseIR-debug-apk
           path: app/build/outputs/apk/debug/app-debug.apk
+
+      - name: Upload Release APK (Unsigned, R8-Minified)
+        uses: actions/upload-artifact@v4
+        with:
+          name: PulseIR-release-unsigned-apk
+          path: app/build/outputs/apk/release/app-release-unsigned.apk

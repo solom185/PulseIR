@@ -5,6 +5,7 @@ import com.pulseir.remote.data.AppPreferences
 import com.pulseir.remote.data.CatalogRepository
 import com.pulseir.remote.data.UserRepository
 import com.pulseir.remote.ir.IrTransmitter
+import com.pulseir.remote.lockscreen.RemoteNotificationController
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -25,6 +26,7 @@ class PulseIRApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         preferences = AppPreferences(this)
+        RemoteNotificationController.init(preferences)
         catalogRepository = CatalogRepository(this)
         userRepository = UserRepository(this, catalogRepository)
         irTransmitter = IrTransmitter(this).apply {

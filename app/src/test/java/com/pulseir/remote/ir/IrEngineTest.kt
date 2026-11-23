@@ -1,7 +1,9 @@
 package com.pulseir.remote.ir
 
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotEquals
 import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
@@ -22,6 +24,27 @@ class IrEngineTest {
         assertEquals(560, tx.patternUs[5]) // bit 1 = 0
         assertEquals(1690, tx.patternUs[7]) // bit 2 = 1
         assertEquals(560, tx.patternUs.last())
+    }
+
+    @Test
+    fun necExt_encodes16BitAddressAnd16BitCommandWithoutInversion() {
+        val signal = IrSignal.Parsed(IrProtocol.NECext, address = 0x1234, command = 0x5678)
+        val tx = IrProtocolEncoder.encode(signal)
+        assertEquals(38000, tx.frequencyHz)
+        assertEquals(67, tx.patternUs.size)
+        // Low byte of address = 0x34 (00110100) -> bit 2 is 1 (index 2 + 2*2 + 1 = 7)
+        assertEquals(1690, tx.patternUs[7])
+        // High byte of address = 0x12 (00010010) -> bit 1 is 1 (index 2 + 16 + 1*2 + 1 = 21)
+        assertEquals(1690, tx.patternUs[21])
+    }
+
+    @Test
+    fun nec42_encodes42BitsWith87Pulses() {
+        val signal = IrSignal.Parsed(IrProtocol.NEC42, address = 0x0123, command = 0x45)
+        val tx = IrProtocolEncoder.encode(signal)
+        assertEquals(38000, tx.frequencyHz)
+        // Header (2) + 42 bits * 2 (84) + stop mark (1) = 87
+        assertEquals(87, tx.patternUs.size)
     }
 
     @Test
@@ -55,6 +78,40 @@ class IrEngineTest {
     }
 
     @Test
+    fun kaseikyo_encodes48BitsWith99PulsesAndPanasonicHeader() {
+        val signal = IrSignal.Parsed(IrProtocol.Kaseikyo, address = 0x00200200, command = 0x0000003D)
+        val tx = IrProtocolEncoder.encode(signal)
+        assertEquals(38000, tx.frequencyHz)
+        // Header (2) + 48 bits * 2 (96) + stop (1) = 99
+        assertEquals(99, tx.patternUs.size)
+        assertEquals(432 * 8, tx.patternUs[0])
+        assertEquals(432 * 4, tx.patternUs[1])
+    }
+
+    @Test
+    fun rca_encodes24BitsWith51Pulses() {
+        val signal = IrSignal.Parsed(IrProtocol.RCA, address = 0x0F, command = 0x2A)
+        val tx = IrProtocolEncoder.encode(signal)
+        assertEquals(38000, tx.frequencyHz)
+        // Header (2) + 24 bits * 2 (48) + stop (1) = 51
+        assertEquals(51, tx.patternUs.size)
+        assertEquals(4000, tx.patternUs[0])
+        assertEquals(4000, tx.patternUs[1])
+    }
+
+    @Test
+    fun pioneer_sendsRepeatedFrameAt40kHz() {
+        val signal = IrSignal.Parsed(IrProtocol.Pioneer, address = 0xA5, command = 0x1C)
+        val tx = IrProtocolEncoder.encode(signal)
+        assertEquals(40000, tx.frequencyHz)
+        // Single frame = 2 + 64 + 1 = 67; repeated + 26000 gap = 135
+        assertEquals(135, tx.patternUs.size)
+        assertEquals(8500, tx.patternUs[0])
+        assertEquals(4225, tx.patternUs[1])
+        assertEquals(26000, tx.patternUs[67])
+    }
+
+    @Test
     fun all14Protocols_produceValidPositivePulses() {
         for (proto in IrProtocol.entries) {
             val tx = IrProtocolEncoder.encode(
@@ -68,16 +125,30 @@ class IrEngineTest {
     }
 
     @Test
-    fun rc5_toggleChangesPattern() {
-        val s = IrSignal.Parsed(IrProtocol.RC5, address = 0x00, command = 0x0C)
-        val t0 = IrProtocolEncoder.encode(s, toggleOverride = false)
-        val t1 = IrProtocolEncoder.encode(s, toggleOverride = true)
-        assertEquals(36000, t0.frequencyHz)
-        assertTrue(!t0.patternUs.contentEquals(t1.patternUs))
+    fun rc5_andRc6_toggleChangesPattern() {
+        val rc5 = IrSignal.Parsed(IrProtocol.RC5, address = 0x00, command = 0x0C)
+        val r5t0 = IrProtocolEncoder.encode(rc5, toggleOverride = false)
+        val r5t1 = IrProtocolEncoder.encode(rc5, toggleOverride = true)
+        assertEquals(36000, r5t0.frequencyHz)
+        assertTrue(!r5t0.patternUs.contentEquals(r5t1.patternUs))
+
+        val rc6 = IrSignal.Parsed(IrProtocol.RC6, address = 0x04, command = 0x10)
+        val r6t0 = IrProtocolEncoder.encode(rc6, toggleOverride = false)
+        val r6t1 = IrProtocolEncoder.encode(rc6, toggleOverride = true)
+        assertEquals(36000, r6t0.frequencyHz)
+        assertEquals(2666, r6t0.patternUs[0])
+        assertTrue(!r6t0.patternUs.contentEquals(r6t1.patternUs))
     }
 
     @Test
-    fun prontoHex_parsesSamsungPowerAccurately() {
+    fun rc5x_encodesHighCommandBitIntoStartBit2() {
+        val low = IrProtocolEncoder.encode(IrSignal.Parsed(IrProtocol.RC5X, address = 0x05, command = 0x10), toggleOverride = false)
+        val high = IrProtocolEncoder.encode(IrSignal.Parsed(IrProtocol.RC5X, address = 0x05, command = 0x50), toggleOverride = false)
+        assertNotEquals(low.patternUs.toList(), high.patternUs.toList())
+    }
+
+    @Test
+    fun prontoHex_parsesSamsungPowerAndRejectsInvalidInputs() {
         // Classic 38kHz Pronto Hex snippet
         val pronto = "0000 006D 0004 0000 00AC 00AC 0015 0041 0015 0015 0015 0689"
         val raw = IrCodeParser.parseProntoHex(pronto)
@@ -85,6 +156,22 @@ class IrEngineTest {
         assertTrue(raw!!.frequencyHz in 37500..38500)
         assertEquals(8, raw.patternUs.size)
         assertTrue("Header mark ~4500us, got ${raw.patternUs[0]}", raw.patternUs[0] in 4300..4700)
+
+        // Non-0000 format, zero freq divisor, or too few words must return null
+        assertNull(IrCodeParser.parseProntoHex("5000 006D 0004 0000 0010 0010"))
+        assertNull(IrCodeParser.parseProntoHex("0000 0000 0002 0000 0010 0010"))
+        assertNull(IrCodeParser.parseProntoHex("0000 006D"))
+        assertNull(IrCodeParser.parseProntoHex("not hex at all"))
+    }
+
+    @Test
+    fun rawPattern_convertsCarrierCyclesToMicroseconds() {
+        val raw = IrCodeParser.parseRawPattern(38000, "342 171 21 21", valuesAreCycles = true)
+        assertNotNull(raw)
+        assertEquals(38000, raw!!.frequencyHz)
+        assertTrue(raw.patternUs[0] in 8900..9100)
+        assertTrue(raw.patternUs[1] in 4400..4600)
+        assertNull(IrCodeParser.parseRawPattern(38000, "500"))
     }
 
     @Test
@@ -117,6 +204,15 @@ class IrEngineTest {
         val sig1 = buttons[1].signal as IrSignal.Raw
         assertEquals(38000, sig1.frequencyHz)
         assertEquals(listOf(9000, 4500, 560, 560, 560, 1690), sig1.patternUs)
+    }
+
+    @Test
+    fun inferRole_mapsCommonAliasesAccurately() {
+        assertEquals(ButtonRole.POWER, IrCodeParser.inferRole("Standby"))
+        assertEquals(ButtonRole.VOL_UP, IrCodeParser.inferRole("Volume+"))
+        assertEquals(ButtonRole.CH_DOWN, IrCodeParser.inferRole("CH_Prev"))
+        assertEquals(ButtonRole.TEMP_UP, IrCodeParser.inferRole("Temp+"))
+        assertEquals(ButtonRole.OTHER, IrCodeParser.inferRole("Netflix"))
     }
 
     @Test

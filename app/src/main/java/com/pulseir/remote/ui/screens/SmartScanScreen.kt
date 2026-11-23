@@ -75,6 +75,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.pulseir.remote.R
+import com.pulseir.remote.data.AppPreferences
 import com.pulseir.remote.data.CatalogBrand
 import com.pulseir.remote.data.CatalogCategory
 import com.pulseir.remote.data.CatalogRemote
@@ -96,6 +97,7 @@ import kotlinx.coroutines.delay
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SmartScanScreen(
+    preferences: AppPreferences,
     catalogRepository: CatalogRepository,
     userRepository: UserRepository,
     irTransmitter: IrTransmitter,
@@ -114,7 +116,12 @@ fun SmartScanScreen(
     var inActiveSession by remember { mutableStateOf(false) }
     var currentIndex by remember { mutableIntStateOf(0) }
     var isScanning by remember { mutableStateOf(false) }
-    var scanDelayMs by remember { mutableLongStateOf(450L) }
+    var scanDelayMs by remember { mutableLongStateOf(preferences.settings.value.scanSpeedMs) }
+
+    fun updateScanSpeed(ms: Long) {
+        scanDelayMs = ms
+        preferences.setScanSpeedMs(ms)
+    }
 
     // Keep screen awake during an active scan session so screen never locks mid-blast
     KeepScreenOnEffect(enabled = inActiveSession && isScanning)
@@ -302,22 +309,22 @@ fun SmartScanScreen(
                     ) {
                         FilterChip(
                             selected = scanDelayMs == 250L,
-                            onClick = { scanDelayMs = 250L },
+                            onClick = { updateScanSpeed(250L) },
                             label = { Text(stringResource(R.string.speed_turbo), maxLines = 1) },
                         )
                         FilterChip(
                             selected = scanDelayMs == 450L,
-                            onClick = { scanDelayMs = 450L },
+                            onClick = { updateScanSpeed(450L) },
                             label = { Text(stringResource(R.string.speed_fast), maxLines = 1) },
                         )
                         FilterChip(
                             selected = scanDelayMs == 1000L,
-                            onClick = { scanDelayMs = 1000L },
+                            onClick = { updateScanSpeed(1000L) },
                             label = { Text(stringResource(R.string.speed_normal), maxLines = 1) },
                         )
                         FilterChip(
                             selected = scanDelayMs == 2000L,
-                            onClick = { scanDelayMs = 2000L },
+                            onClick = { updateScanSpeed(2000L) },
                             label = { Text(stringResource(R.string.speed_slow), maxLines = 1) },
                         )
                     }
