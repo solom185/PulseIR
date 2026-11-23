@@ -111,7 +111,7 @@ fun HomeScreen(
     var showNewCustomDialog by remember { mutableStateOf(false) }
     var editingDevice by remember { mutableStateOf<SavedDevice?>(null) }
     var runningMacroId by remember { mutableStateOf<String?>(null) }
-    var catalogStats by remember { mutableStateOf(1952 to 35927) }
+    var catalogStats by remember { mutableStateOf(6031 to 182000) }
 
     LaunchedEffect(Unit) {
         runCatching { catalogStats = catalogRepository.getCatalogStats() }
@@ -340,13 +340,16 @@ fun HomeScreen(
                                         if (runningMacroId != null) return@QuickMacroChip
                                         scope.launch(Dispatchers.IO) {
                                             runningMacroId = macro.id
-                                            for (step in macro.steps) {
-                                                when (step) {
-                                                    is MacroStep.SendIr -> irTransmitter.transmitBlocking(step.signal, step.label, performHaptic = true)
-                                                    is MacroStep.Delay -> delay(step.delayMs)
+                                            try {
+                                                for (step in macro.steps) {
+                                                    when (step) {
+                                                        is MacroStep.SendIr -> irTransmitter.transmitBlocking(step.signal, step.label, performHaptic = true)
+                                                        is MacroStep.Delay -> delay(step.delayMs)
+                                                    }
                                                 }
+                                            } finally {
+                                                runningMacroId = null
                                             }
-                                            runningMacroId = null
                                         }
                                     },
                                 )

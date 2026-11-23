@@ -53,6 +53,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.pulseir.remote.BuildConfig
 import com.pulseir.remote.R
 import com.pulseir.remote.data.AppLanguage
 import com.pulseir.remote.data.AppPreferences
@@ -343,14 +344,25 @@ fun SettingsScreen(
         item {
             SettingsCard(title = stringResource(R.string.settings_about), icon = Icons.Rounded.Info) {
                 Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
-                    Icon(Icons.Rounded.WifiOff, contentDescription = null, tint = PulseColors.Emerald, modifier = Modifier.size(18.dp))
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    ) {
+                        Icon(Icons.Rounded.WifiOff, contentDescription = null, tint = PulseColors.Emerald, modifier = Modifier.size(18.dp))
+                        Text(
+                            text = stringResource(R.string.zero_internet_badge),
+                            style = MaterialTheme.typography.labelLarge,
+                            color = PulseColors.Emerald,
+                        )
+                    }
                     Text(
-                        text = stringResource(R.string.zero_internet_badge),
-                        style = MaterialTheme.typography.labelLarge,
-                        color = PulseColors.Emerald,
+                        text = "${stringResource(R.string.app_name)} v${BuildConfig.VERSION_NAME}",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                 }
                 Text(

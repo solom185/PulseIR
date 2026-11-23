@@ -35,11 +35,18 @@ class CatalogRepository(context: Context) {
                 appContext.getDatabasePath("pulseir_catalog_v1.db").delete()
                 dbFile.parentFile?.mkdirs()
                 val tmp = File(dbFile.parentFile, "$DB_FILENAME.tmp")
-                val assetStream = runCatching {
-                    GZIPInputStream(BufferedInputStream(appContext.assets.open(ASSET_DB_GZ_NAME), 64 * 1024))
+                val rawStream = runCatching {
+                    appContext.assets.open(ASSET_DB_GZ_NAME)
                 }.getOrElse {
                     appContext.assets.open(ASSET_DB_NAME)
                 }
+                val buffered = BufferedInputStream(rawStream, 64 * 1024)
+                buffered.mark(2)
+                val b0 = buffered.read()
+                val b1 = buffered.read()
+                buffered.reset()
+                val isGzip = (b0 == 0x1F && b1 == 0x8B)
+                val assetStream = if (isGzip) GZIPInputStream(buffered) else buffered
                 assetStream.use { assetIn ->
                     FileOutputStream(tmp).use { out ->
                         assetIn.copyTo(out, bufferSize = 64 * 1024)
